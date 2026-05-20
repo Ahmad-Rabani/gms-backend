@@ -37,6 +37,7 @@ app.get("/api/users", async (req, res) => {
 
     res.json({ message: users });
   } catch (err) {
+    console.error("GET /api/users error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -57,6 +58,7 @@ app.post("/api/users", async (req, res) => {
       data: newUser,
     });
   } catch (error) {
+    console.error("POST /api/users error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -89,7 +91,7 @@ app.put("/api/users/:id", async (req, res) => {
       data: updatedUser,
     });
   } catch (error) {
-    console.log(error);
+    console.error("PUT /api/users/:id error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -114,6 +116,7 @@ app.delete("/api/users/:id", async (req, res) => {
       data: deletedUser,
     });
   } catch (error) {
+    console.error("DELETE /api/users/:id error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
