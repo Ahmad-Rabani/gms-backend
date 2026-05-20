@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
 
 // User Model
 const User = mongoose.model("User", userSchema);
+const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
 
 app.get("/api/users", async (req, res) => {
   try {
@@ -62,14 +63,19 @@ app.post("/api/users", async (req, res) => {
 
 app.put("/api/users/:id", async (req, res) => {
   try {
+    const { id } = req.params;
     const { name } = req.body;
 
     if (!name) {
       return res.status(400).json({ message: "Name is required" });
     }
 
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ message: "Invalid user id" });
+    }
+
     const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
+      id,
       { name },
       { new: true },
     );
@@ -91,7 +97,13 @@ app.put("/api/users/:id", async (req, res) => {
 // DELETE user by ID
 app.delete("/api/users/:id", async (req, res) => {
   try {
-    const deletedUser = await User.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
+
+    if (!isValidObjectId(id)) {
+      return res.status(400).json({ message: "Invalid user id" });
+    }
+
+    const deletedUser = await User.findByIdAndDelete(id);
 
     if (!deletedUser) {
       return res.status(404).json({ message: "User not found" });
